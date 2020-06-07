@@ -18,6 +18,7 @@ It is recommended that the game is run in command-line, but it can be run in a j
 
 #### 2. Clone the repository to your computer
 **PULL REQUESTS WILL NOT BE ACCEPTED**
+
 Write the following in your terminal:
 ``` markdown
 git clone https://github.com/MikkiSeidenschnur/data_ber_ms_tic_tac_toe.git
@@ -33,3 +34,4 @@ python tictactoe.py
 ```
 
 #### 5. Enjoy the game by making your bash terminal full-screen ;)
+![introduction screen](img/TicTacToe_IntroductionScreen.png "introduction screen")
