@@ -1,5 +1,5 @@
 import itertools 
-
+### Ascii art for introduction
 introduction =  "\n\
 ______________________________________________________________________________________________________________________________\n\
  _    _        _                                 _            _____  _____  _____   _____   ___   _____   _____  _____  _____ \n\
@@ -26,6 +26,7 @@ ________________________________________________________________________________
 	ヽ༼ຈل͜ຈ༽ﾉ	FINALLY A FANTASTIC GAME TO PLAY IN YOUR COMMAND LINE   \n\n\
                                                                                                                               "    
 
+### Ascii art for an invalid choice out of bounds
 out_of_bounds = " \n\
  _____ _           _                        _            __   _                           _      \n\
 /  __ \ |         (_)                      | |          / _| | |                         | |     \n\
@@ -47,7 +48,7 @@ ______                                      _                      _            
                                         \n\
 Of course you will find this edge case. Consider this my easter egg ;) \n\
 "
-
+### Ascii art for player 1 winner
 player_one_winner = "\n\
 ______ _                         __    _                 _    _  _____ _   _ _ \n\
 | ___ \ |                       /  |  | |               | |  | ||  _  | \ | | |\n\
@@ -58,6 +59,7 @@ ______ _                         __    _                 _    _  _____ _   _ _ \
                 __/ |                                                          \n\
                |___/                                                           \n\
 "
+### Ascii art for player 2 winner
 player_two_winner = "\n\
 ______ _                         _____   _                 _    _  _____ _   _ _ \n\
 | ___ \ |                       / __  \ | |               | |  | ||  _  | \ | | |\n\
@@ -68,7 +70,7 @@ ______ _                         _____   _                 _    _  _____ _   _ _
                 __/ |                                                            \n\
                |___/                                                             \n\
 "
-
+### Ascii art for a tie where the board is full
 player_no_winner = "\n\
  _____ _   _               _   _      \n\
 |_   _| | ( )             | | (_)     \n\
@@ -79,14 +81,16 @@ player_no_winner = "\n\
                                       \n\
 "
 
-
+### Setting the current game board to 0 on all spots
 current_game_board = [0,0,0,0,0,0,0,0,0]
-player1_win_conditions = []
-player2_win_conditions = []
+### Creating a magic board 
+### (see link for explanation: https://fowlie.github.io/2018/08/24/winning-algorithm-for-tic-tac-toe-using-a-3x3-magic-square/)
 magic_board = [2, 7, 6,
                9, 5, 1,
                4, 3, 8]                                                                        
 
+### Function for printing the tic_tac_toe board seen when game is run
+### with the current_game_board to update the fields
 def tic_tac_toe_board():
     print(f"   a     b     c\n\
       |     |     \n\
@@ -101,7 +105,8 @@ def tic_tac_toe_board():
 
 
 ### User chooses based on interface, 
-### we've updated value to something that is easier handled
+### a value for a column (a-c) or row (1-3) and 
+### returns it as a list of choices later to be converted to a single number
 def choice_getter():
     user_choice_column = 0
     user_choice_row = 0
@@ -110,6 +115,8 @@ def choice_getter():
     user_choice = [user_choice_column, user_choice_row]
     return user_choice
 
+### Take the user_choice from the `choice_getter()` and return a single int from 1 - 9
+### on the board from top left to bottom right
 def spot_converter(user_choice):
     if user_choice == ["a","1"]:
         user_choice_converted = 1
@@ -133,13 +140,14 @@ def spot_converter(user_choice):
         print(out_of_bounds)
     return user_choice_converted
 
-###2. Create the list with the current status of the game
+### `board_updater()` creates the list with the current status of the game
+### with the user_choice and symbol of the player ("X" or "O")
 def board_updater(user_choice, symbol):
     current_game_board[user_choice-1] = symbol
     return current_game_board
 
-## which_player
-## choice_validator
+## `is_choice_valid()` returns true if the choice is valid.
+## it checks whether the choice is in an empty spot
 def is_choice_valid(choice):
     if current_game_board[choice-1] != 0:
         print("Invalid choice")
@@ -149,7 +157,7 @@ def is_choice_valid(choice):
         return False
     return True
 
-### Let's make the board
+### `no_none_value()` takes makes sure that the board is rendered with either "X", "O" or "-" if spot is=0
 def no_none_value(value):
     if value == "X":
         return f"{value}"
@@ -158,6 +166,9 @@ def no_none_value(value):
     elif value == 0:
         return "-"
 
+### `board_simplifier` takes the current game board and converts 
+### all "X"'s into a separate board and all "O"'s into a seperate board
+### that returns the a list of the simplified boards as a list (nested list)
 def board_simplifier(current_game_status):
     player_1_board = []
     player_2_board = []
@@ -174,6 +185,10 @@ def board_simplifier(current_game_status):
     simplified_player_boards = [player_1_board, player_2_board]
     return simplified_player_boards
 
+
+### `magic_board_converter()` takes the simplified player board and converts
+### it to a magic board that has the values of a magic appended, if the value of a cell == 1
+### else it appends a 0
 def magic_board_converter(board):
     current_magic_board = []
     for place in range(len(board)):
@@ -183,9 +198,15 @@ def magic_board_converter(board):
             current_magic_board.append(0)
     return current_magic_board
 
+### The "itertools.combinations" package is used to create subsets consisting of 3 elements
+### of the current magic_board
 def findsubsets(s, n): 
     return list(itertools.combinations(s, n)) 
 
+### `win_checker()` takes the input of the current magic board for a specific player
+### and if the sum of one of the subsets, that does not contain a 0, is equal to 15, 
+### the active player has won the game. This is done returning a True value
+### therefore, exciting the function.
 def win_checker(board):
     n = 3
     subsets = []
@@ -196,27 +217,43 @@ def win_checker(board):
                 print("We have a winner")
                 return True
 
+### The `game_instantiater`is the function that runs the game. It is called in the
+### bottom of the code
 def game_instantiater():
+    ### We print the welcoming introduction ASCII art
     print(introduction)
+    ### We set the value of player1_winner, player2_winner and is_win_condition_not_met to be False, so that 
+    ### the below while loop keeps running.
     player1_winner = False
     player2_winner = False
     is_win_condition_not_met = False
     current_game_status = [0,0,0,0,0,0,0,0,0]
     player1 = create_player("X", "Player 1")
     player2 = create_player("O", "Player 2")
-
+    ### We print the clean tic tac toe board
     tic_tac_toe_board()
+    ### We create a while loop that runs as long as the win condition is not met and there
+    ### there is a 0 in the current_game_board. This exits the while loop if the board is full
+    ### or there is a winner
     while not is_win_condition_not_met and 0 in current_game_board:
+        ### We run the turn of player 1.
+        ### If run_safe_turn returns "win" it returns true, and exits the function
         player1_winner = run_safe_turn(player1)
         if player1_winner == "win":
             return True
+        ### This if statement returns True, so forth there are no more empty spots on the board
+        ### hence the board is full and prints the "It's a tie announcement" 
         if 0 not in current_game_board:
             print(player_no_winner)
             return True
+        ### We run the turn of player 2. 
+        ### If run_safe_turn returns "win" it returns true, and exits the function
         player2_winner = run_safe_turn(player2)
         if player2_winner == "win":
             return True
 
+### run_safe_turn takes the player if and runs the turn. While the player has not
+### chosen a valid cell, it will rerun, until an empty cell has been selected
 def run_safe_turn(player):
     turn_status = 0
     while turn_status == "error" or turn_status == 0:
@@ -228,24 +265,35 @@ def run_safe_turn(player):
             return "win"
         elif turn_status == "error":
             print("Error encountered, replaying turn")
-    
+    ### returns "next if the turn is executed correctly, thus moving to next players turn"
     return "next"
 
+### `announce_winner()` uses the dictionary `create_player` to announce the current player
+### as a winner
 def announce_winner(player):
     if player["name"] == "Player 1":
         print(player_one_winner)
     if player["name"] == "Player 2":
         print(player_two_winner)
 
+### We use a dictionary as a method to create a player and link "X" to "Player 1" and
+### "O" to "Player 2"
 def create_player(symbol, name):
     return {
                 "symbol": symbol, 
                 "name": name,
             }
 
+### `run_turn_for_player()` takes the current player and runs through their turn.
 def run_turn_for_player(player):
+    ### The choice of the player is asked for
     choice = choice_getter()
+    ### The choice converts to a "X" "O" board
     choice_converted = spot_converter(choice)
+    ### If is_choice_valid(choice_converted) == True then the board is reprinted
+    ### with the updated value, and run through the win checker. If `win_checker()` == True
+    ### the current player has won. If the choice is not valid, "error" is returned
+    ### and the `run_safe_turn()` reruns the turn until a valid choice has been made.
     if is_choice_valid(choice_converted):
         board = board_updater(choice_converted,player["symbol"])
         tic_tac_toe_board()
@@ -258,4 +306,5 @@ def run_turn_for_player(player):
     else:
         return "error"
 
+### We instantiate the game to start
 game_instantiater()
