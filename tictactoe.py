@@ -69,6 +69,15 @@ ______ _                         _____   _                 _    _  _____ _   _ _
                |___/                                                             \n\
 "
 
+player_no_winner = "\n\
+ _____ _   _               _   _      \n\
+|_   _| | ( )             | | (_)     \n\
+  | | | |_|/ ___    __ _  | |_ _  ___ \n\
+  | | | __| / __|  / _` | | __| |/ _ \ \n\
+ _| |_| |_  \__ \ | (_| | | |_| |  __/\n\
+ \___/ \__| |___/  \__,_|  \__|_|\___|\n\
+                                      \n\
+"
 
 
 current_game_board = [0,0,0,0,0,0,0,0,0]
@@ -200,6 +209,9 @@ def game_instantiater():
     while not is_win_condition_not_met and 0 in current_game_board:
         player1_winner = run_safe_turn(player1)
         if player1_winner == "win":
+            return True
+        if 0 not in current_game_board:
+            print(player_no_winner)
             return True
         player2_winner = run_safe_turn(player2)
         if player2_winner == "win":
